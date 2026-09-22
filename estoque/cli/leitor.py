@@ -15,16 +15,6 @@ settings = Settings()
 produtos = ProdutoRepository(settings.dir_dados).listar()
 levantamento = LevantamentoService(produtos)
 
-async def conectar_servidor():
-    while True:
-        try:
-            connection = await websocket_connect("ws://localhost:8888/")
-            logger.info("Conectado ao servidor WebSocket.")
-            return connection
-        except OSError as erro:
-            logger.error("Não foi possível conectar ao servidor: %s", erro)
-            await asyncio.sleep(settings.serial_reconnect_delay_seconds)
-
 def enviar_levantamento(connection) -> None:
     mensagem = Mensagem(
         acao="enviar_levantamento",
