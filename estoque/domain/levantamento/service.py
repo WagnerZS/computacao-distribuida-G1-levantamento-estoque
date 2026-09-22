@@ -27,3 +27,6 @@ class LevantamentoService:
 
     def obter_levantamento(self) -> list[ProdutoLevantamento]:
         return self._levantamento.copy()
+
+    def limpar_levantamento(self) -> None:
+        self._levantamento.clear()

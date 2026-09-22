@@ -26,7 +26,7 @@ class WebSocketHandler(TornadoWebSocketHandler):
     def on_message(self, message: str) -> None:
         dados = Mensagem.model_validate_json(message)
 
-        if dados.acao == "finalizar":
+        if dados.acao == "enviar_levantamento":
             if dados.produtos:
                 balancete_logger.info("========== BALANCETE ==========")
                 for item in dados.produtos:
@@ -36,6 +36,10 @@ class WebSocketHandler(TornadoWebSocketHandler):
                         item.quantidade,
                     )
                 balancete_logger.info("===============================")
+            else:
+                balancete_logger.info("Balancete vazio!")
+
+        self.write_message(Mensagem(acao="levantamento_recebido").model_dump_json())
 
     def on_close(self) -> None:
         WebSocketHandler.connection = None
