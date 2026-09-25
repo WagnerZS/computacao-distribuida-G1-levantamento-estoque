@@ -8,37 +8,51 @@ O projeto simula um processo de inventário no qual um Arduino detecta a leitura
 
 ## 🏗️ Arquitetura
 
+## Arquitetura
+
+O projeto é composto por um Arduino, um cliente Python, um servidor WebSocket e uma interface web.
+
 ```text
-                    ┌───────────────┐
-                    │    Arduino    │
-                    │               │
-                    │ Sensor KY-032 │
-                    └──────┬────────┘
-                           │
-                      Serial USB
-                           │
-                           ▼
-                 ┌───────────────────┐
-                 │      Cliente      │
-                 │                   │
-                 │ SerialInputSource │
-                 │        ↓          │
-                 │      Parser       │
-                 │        ↓          │
-                 │    Levantamento   │
-                 │      Service      │
-                 └────────┬──────────┘
-                          │
-                      WebSocket
-                          │
-                          ▼
-                 ┌──────────────────┐
-                 │     Servidor     │
-                 │                  │
-                 │ WebSocketHandler │
-                 │        ↓         │
-                 │    Balancete     │
-                 └──────────────────┘
+                        ┌─────────────────────┐
+                        │     Funcionário     │
+                        └──────────┬──────────┘
+                                   │
+                                   │ Leitura
+                                   ▼
+                        ┌─────────────────────┐
+                        │       Arduino       │
+                        └──────────┬──────────┘
+                                   │ Serial
+                                   ▼
+                        ┌─────────────────────┐
+                        │    Cliente Python   │
+                        │      (Leitor)       │
+                        └──────────┬──────────┘
+                                   │
+                                   │ WebSocket
+                                   ▼
+                  ┌────────────────────────────────┐
+                  │       Servidor WebSocket       │
+                  │            Tornado             │
+                  └───────────────┬────────────────┘
+                                  │
+                                  │ WebSocket
+                                  ▼
+                  ┌────────────────────────────────┐
+                  │         Interface Web          │
+                  │                                │
+                  │ index.html                     │
+                  │ static/scripts/app.js          │
+                  │ static/styles/style.css        │
+                  └────────────────────────────────┘
+                                  │
+                                  │ Envia levantamento
+                                  ▼
+                  ┌────────────────────────────────┐
+                  │       Servidor WebSocket       │
+                  │                                │
+                  │    Processa o levantamento     │
+                  └────────────────────────────────┘
 ```
 
 ## 🚀 Execução do projeto
