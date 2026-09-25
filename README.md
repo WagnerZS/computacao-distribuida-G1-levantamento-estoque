@@ -102,3 +102,9 @@ Abra um **segundo terminal**, também na raiz do projeto, e execute:
 ```bash
 uv run task cli
 ```
+
+### 5. Acessar interface
+
+```
+Abra no navegador http://localhost:8888/ para acessar interface/client web
+```
