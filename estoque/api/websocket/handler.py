@@ -1,5 +1,6 @@
 from tornado.websocket import WebSocketHandler as TornadoWebSocketHandler
 
+from estoque.api.websocket.connection_manager import ConnectionManager
 from estoque.api.websocket.entity import Mensagem
 
 import logging
@@ -17,16 +18,21 @@ balancete_logger.propagate = False
 
 
 class WebSocketHandler(TornadoWebSocketHandler):
-    connection = None
+    def initialize(self, connection_manager: ConnectionManager) -> None:
+        self.connection_manager = connection_manager
 
     def open(self) -> None:
-        WebSocketHandler.connection = self
+        self.connection_manager.add(self)
         logger.info("Cliente WebSocket conectado.")
 
     def on_message(self, message: str) -> None:
         dados = Mensagem.model_validate_json(message)
 
-        if dados.acao == "enviar_levantamento":
+        if dados.acao == "produto_lido":
+            self.connection_manager.broadcast_except(self, message)
+        elif dados.acao == "enviar_levantamento":
+            self.connection_manager.broadcast_except(self, message)
+        elif dados.acao == "levantamento_completo":
             if dados.produtos:
                 balancete_logger.info("========== BALANCETE ==========")
                 for item in dados.produtos:
@@ -38,9 +44,8 @@ class WebSocketHandler(TornadoWebSocketHandler):
                 balancete_logger.info("===============================")
             else:
                 balancete_logger.info("Balancete vazio!")
-
-        self.write_message(Mensagem(acao="levantamento_recebido").model_dump_json())
+            self.connection_manager.broadcast(message)
 
     def on_close(self) -> None:
-        WebSocketHandler.connection = None
+        self.connection_manager.remove(self)
         logger.info("Cliente WebSocket desconectado.")

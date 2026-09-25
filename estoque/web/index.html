@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Levantamento de Estoque</title>
+
+    <link rel="stylesheet" href="static/styles/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Levantamento de Estoque</h1>
+        <p>Sistema de Computação Distribuída</p>
+    </header>
+
+    <main>
+        <section class="status">
+            <h2>Servidor WebSocket</h2>
+            <div class="linha">
+                <span>Situação</span>
+                <strong id="status" class="desconectado">
+                    Desconectado
+                </strong>
+            </div>
+            <button onclick="conectar()">
+                Reconectar
+            </button>
+        </section>
+
+        <!-- LEVANTAMENTO -->
+        <section class="levantamento">
+            <div class="topo">
+                <div>
+                    <h2>Levantamento</h2>
+                    <p>Produtos registrados</p>
+                </div>
+                <button id="enviar" onclick="enviarLevantamento()" disabled>
+                    Enviar levantamento
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Código</th>
+                        <th>Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela">
+                    <tr>
+                        <td colspan="3" class="vazio">
+                            Nenhum produto registrado.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="static/scripts/app.js"></script>
+
+</body>
+</html>

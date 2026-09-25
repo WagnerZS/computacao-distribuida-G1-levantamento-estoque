@@ -1,31 +1,35 @@
-import asyncio
 import logging
 
-from tornado.websocket import websocket_connect
-
-from estoque.config import Settings
+from tornado.websocket import WebSocketHandler
 
 logger = logging.getLogger(__name__)
 
+
 class ConnectionManager:
-    def __init__(self, settings: Settings) -> None:
-        self._settings = settings
-        self._connection = None
+    def __init__(self) -> None:
+        self._connections: set[WebSocketHandler] = set()
 
-    @property
-    def connection(self):
-        return self._connection
+    def add(self, connection: WebSocketHandler) -> None:
+        self._connections.add(connection)
 
-    async def conectar(self):
-        while True:
+    def remove(self, connection: WebSocketHandler) -> None:
+        self._connections.discard(connection)
+
+    def broadcast(self, mensagem: str) -> None:
+        for connection in tuple(self._connections):
             try:
-                self._connection = await websocket_connect("ws://localhost:8888/")
-                logger.info("Conectado ao servidor WebSocket.")
-                return self._connection
-            except Exception as erro:
-                logger.error("Não foi possível conectar ao servidor: %s", erro)
-                await asyncio.sleep(self._settings.serial_reconnect_delay_seconds)
+                connection.write_message(mensagem)
+            except Exception as error:
+                logger.error("Falha ao enviar mensagem pelo WebSocket: %s", error)
+                self._connections.discard(connection)
 
-    async def reconectar(self):
-        await asyncio.sleep(self._settings.serial_reconnect_delay_seconds)
-        await self.conectar()
+    def broadcast_except(self, remetente: WebSocketHandler, mensagem: str) -> None:
+        for connection in tuple(self._connections):
+            if connection is remetente:
+                continue
+
+            try:
+                connection.write_message(mensagem)
+            except Exception as err:
+                logger.error("Falha ao enviar mensagem pelo WebSocket: %s", err)
+                self._connections.discard(connection)

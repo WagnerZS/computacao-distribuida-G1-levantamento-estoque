@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6fa;
+    color: #172033;
+}
+
+header {
+    background: #1f4ed8;
+    color: white;
+    padding: 30px 8%;
+}
+
+header h1 {
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+header p {
+    opacity: 0.8;
+}
+
+main {
+    width: 85%;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+.status,
+.levantamento {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+    margin-bottom: 25px;
+}
+
+.linha {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 18px 0;
+
+    border-bottom:
+        1px solid #ddd;
+}
+
+.conectado {
+    color: #16a34a;
+}
+
+.desconectado {
+    color: #dc2626;
+}
+
+button {
+    border: none;
+    background: #1f4ed8;
+    color: white;
+
+    padding: 13px 25px;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin-top: 20px;
+}
+
+button:hover {
+    background: #183ea9;
+}
+
+button:disabled {
+    background: #aab5d4;
+    cursor: not-allowed;
+}
+
+.topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+.topo button {
+    margin: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f1f4f9;
+    text-align: left;
+}
+
+th,
+td {
+    padding: 15px;
+
+    border-bottom:
+        1px solid #ddd;
+}
+
+.vazio {
+    text-align: center;
+    color: #777;
+    padding: 40px;
+}
+
+@media (max-width: 700px) {
+
+    main {
+        width: 95%;
+    }
+
+    .topo {
+        display: block;
+    }
+
+    .topo button {
+        margin-top: 20px;
+    }
+
+    .linha {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
